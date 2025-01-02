@@ -38,10 +38,6 @@ main() {
 
         if [[ $? -eq 0 ]]; then
             echo "Download successful: $APK_NAME"
-            local DOWNLOAD_DIR="/storage/emulated/0/Download"
-            echo "Attempting to install $APK_NAME..."
-            pm install "$DOWNLOAD_DIR/$APK_NAME" || \
-            echo "Manual installation required for $APK_NAME"
         else
             echo "Failed to download $APK_NAME"
         fi
@@ -49,3 +45,12 @@ main() {
 }
 
 main
+
+echo "Installing APKs..."
+for apk in "$DOWNLOAD_DIR"/*.apk; do
+    if termux-open "$apk"; then
+        echo "$apk installation initiated."
+    else
+        echo "Failed to initiate installation for $apk."
+    fi
+done
