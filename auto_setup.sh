@@ -1,12 +1,11 @@
 #!/bin/bash
 
-# Function to check and install necessary dependencies
 setup_environment() {
     echo "Updating Termux packages..."
-    pkg update -y && pkg upgrade -y
+    yes | pkg update && yes | pkg upgrade
 
     echo "Installing required tools (wget or curl)..."
-    pkg install wget curl openssl-tool -y
+    yes | pkg install wget curl openssl-tool
 
     echo "Setting up storage permissions for Termux..."
     termux-setup-storage
@@ -14,20 +13,23 @@ setup_environment() {
     echo "Checking for libssl dependencies..."
     if ! [ -f /data/data/com.termux/files/usr/lib/libssl.so.3 ]; then
         echo "Installing libssl..."
-        pkg install openssl -y
+        yes | pkg install openssl
     fi
 }
 
 download_file() {
     local APK_NAME=$1
     local APK_URL=$2
+    local DOWNLOAD_DIR="/storage/emulated/0/download"
+
+    mkdir -p "$DOWNLOAD_DIR"
 
     if command -v wget &>/dev/null; then
         echo "Using wget to download $APK_NAME..."
-        wget -O "$APK_NAME" "$APK_URL"
+        wget -O "$DOWNLOAD_DIR/$APK_NAME" "$APK_URL"
     elif command -v curl &>/dev/null; then
         echo "Using curl to download $APK_NAME..."
-        curl -L -o "$APK_NAME" "$APK_URL"
+        curl -L -o "$DOWNLOAD_DIR/$APK_NAME" "$APK_URL"
     else
         echo "Error: Neither wget nor curl is available for download!"
         return 1
@@ -53,8 +55,10 @@ main() {
 
         if [[ $? -eq 0 ]]; then
             echo "Download successful: $APK_NAME"
+            local DOWNLOAD_DIR="/storage/emulated/0/Download"
             echo "Attempting to install $APK_NAME..."
-            am start -a android.intent.action.VIEW -d "file://$(pwd)/$APK_NAME" -t "application/vnd.android.package-archive" || echo "Manual installation required for $APK_NAME"
+            am start -a android.intent.action.VIEW -d "file://$DOWNLOAD_DIR/$APK_NAME" -t "application/vnd.android.package-archive" || \
+            echo "Manual installation required for $APK_NAME"
         else
             echo "Failed to download $APK_NAME"
         fi
