@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DOWNLOAD_DIR="/storage/emulated/0/download"
+
 startup() {
     if ! command -v jq &> /dev/null; then
         echo "Checking Please Wait..."
@@ -12,8 +14,8 @@ startup() {
 download_from_repo() {
     echo "Downloading APKs from the repository..."
     for apk in "Android_ID_Changer.apk" "Control_Screen_Orientation.apk" "ZArchiver.apk"; do
-        if curl -O https://raw.githubusercontent.com/inCythe/UG-Auto_Setup/main/apks/$apk; then
-            echo "$apk downloaded successfully."
+        if curl -o "$DOWNLOAD_DIR/$apk" https://raw.githubusercontent.com/inCythe/UG-Auto_Setup/main/apks/$apk; then
+            echo "$apk downloaded successfully to $DOWNLOAD_DIR."
         else
             echo "Failed to download $apk."
         fi
@@ -32,7 +34,8 @@ download_from_release() {
         download_url=$(echo "$response" | jq -r '.assets[] | select(.name == "Roblox.apk") | .url')
         
         if [ -n "$download_url" ]; then
-            curl -LO "$download_url" && echo "Roblox.apk downloaded successfully." || echo "Failed to download Roblox.apk."
+            echo "Downloading from URL: $download_url"
+            curl -o "$DOWNLOAD_DIR/Roblox.apk" "$download_url" && echo "Roblox.apk downloaded successfully to $DOWNLOAD_DIR." || echo "Failed to download Roblox.apk."
         else
             echo "Roblox.apk not found in the latest release."
         fi
@@ -46,7 +49,7 @@ download_from_repo
 download_from_release
 
 echo "Installing APKs..."
-for apk in *.apk; do
+for apk in "$DOWNLOAD_DIR"/*.apk; do
     if termux-open "$apk"; then
         echo "$apk installation initiated."
     else
