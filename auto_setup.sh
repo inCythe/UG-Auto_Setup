@@ -46,8 +46,10 @@ download_from_repo
 download_from_release
 
 echo "Installing APKs..."
-if pm install *.apk; then
-    echo "All APKs have been installed."
-else
-    echo "Failed to install some APKs."
-fi
+for apk in *.apk; do
+    if termux-open "$apk"; then
+        echo "$apk installation initiated."
+    else
+        echo "Failed to initiate installation for $apk."
+    fi
+done
