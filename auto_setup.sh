@@ -48,9 +48,13 @@ main
 
 echo "Installing APKs..."
 for apk in "$DOWNLOAD_DIR"/*.apk; do
-    if termux-open "$apk"; then
-        echo "$apk installation initiated."
+    if [ -f "$apk" ]; then
+        if termux-open "$apk"; then
+            echo "$apk installation initiated."
+        else
+            echo "Failed to initiate installation for $apk."
+        fi
     else
-        echo "Failed to initiate installation for $apk."
+        echo "No APKs found in $DOWNLOAD_DIR."
     fi
 done
