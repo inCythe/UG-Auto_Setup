@@ -13,7 +13,7 @@ download_from_repo() {
 
 download_from_release() {
     echo "Downloading Executor from the latest release..."
-    if curl -s https://api.github.com/repos/inCythe/UG-Auto_Setup/releases/latest; then
+    if curl -s https://api.github.com/repos/inCythe/UG-Auto_Setup/releases/latest/Roblox.apk; then
         echo "Executor downloaded successfully."
     else
         echo "Failed to Executor."
