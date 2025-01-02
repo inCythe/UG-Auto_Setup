@@ -14,7 +14,7 @@ startup() {
 download_from_repo() {
     echo "Downloading APKs from the repository..."
     for apk in "Android_ID_Changer.apk" "Control_Screen_Orientation.apk" "ZArchiver.apk"; do
-        if curl -o "$DOWNLOAD_DIR/$apk" https://raw.githubusercontent.com/inCythe/UG-Auto_Setup/main/apks/$apk; then
+        if curl -f -o "$DOWNLOAD_DIR/$apk" "https://raw.githubusercontent.com/inCythe/UG-Auto_Setup/main/apks/$apk"; then
             echo "$apk downloaded successfully to $DOWNLOAD_DIR."
         else
             echo "Failed to download $apk."
@@ -26,16 +26,17 @@ download_from_release() {
     echo "Downloading Roblox.apk from the latest release..."
     response=$(curl -s https://api.github.com/repos/inCythe/UG-Auto_Setup/releases/latest)
     
-    echo "Response from GitHub API:"
-    echo "$response"
-
     if echo "$response" | jq . >/dev/null 2>&1; then
         echo "Parsing response..."
-        download_url=$(echo "$response" | jq -r '.assets[] | select(.name == "Roblox.apk") | .url')
+        browser_download_url=$(echo "$response" | jq -r '.assets[] | select(.name == "Roblox.apk") | .browser_download_url')
         
-        if [ -n "$download_url" ]; then
-            echo "Downloading from URL: $download_url"
-            curl -o "$DOWNLOAD_DIR/Roblox.apk" "$download_url" && echo "Roblox.apk downloaded successfully to $DOWNLOAD_DIR." || echo "Failed to download Roblox.apk."
+        if [ -n "$browser_download_url" ]; then
+            echo "Downloading from URL: $browser_download_url"
+            if curl -f -L -o "$DOWNLOAD_DIR/Roblox.apk" "$browser_download_url"; then
+                echo "Roblox.apk downloaded successfully to $DOWNLOAD_DIR."
+            else
+                echo "Failed to download Roblox.apk."
+            fi
         else
             echo "Roblox.apk not found in the latest release."
         fi
@@ -50,9 +51,13 @@ download_from_release
 
 echo "Installing APKs..."
 for apk in "$DOWNLOAD_DIR"/*.apk; do
-    if termux-open "$apk"; then
-        echo "$apk installation initiated."
+    if [ -f "$apk" ]; then
+        if termux-open "$apk"; then
+            echo "$apk installation initiated."
+        else
+            echo "Failed to initiate installation for $apk."
+        fi
     else
-        echo "Failed to initiate installation for $apk."
+        echo "No APKs found in $DOWNLOAD_DIR."
     fi
 done
