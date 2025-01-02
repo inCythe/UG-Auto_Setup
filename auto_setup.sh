@@ -24,7 +24,7 @@ install_apk() {
     local APK_PATH=$1
     echo "Triggering installation for $APK_PATH..."
     
-    am start -a android.intent.action.VIEW -d "file://$APK_PATH" -t "application/vnd.android.package-archive"
+    am start -a android.intent.action.VIEW -d "$APK_PATH" -t "application/vnd.android.package-archive"
 
     return $?
 }
