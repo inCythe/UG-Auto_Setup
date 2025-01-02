@@ -21,15 +21,6 @@ download_file() {
     return $?
 }
 
-install_apk() {
-    local APK_PATH=$1
-    echo "Triggering installation for $APK_PATH..."
-    
-    am start -a android.intent.action.VIEW -d "file://$APK_PATH" -t "application/vnd.android.package-archive"
-
-    return $?
-}
-
 declare -A APK_FILES=(
     ["Roblox.apk"]="https://github.com/inCythe/UG-Auto_Setup/releases/download/1.4.9/Roblox.apk"
     ["Android_ID_Changer.apk"]="https://github.com/inCythe/UG-Auto_Setup/releases/download/1.0/Android_ID_Changer.apk"
@@ -47,8 +38,6 @@ main() {
 
         if [[ $? -eq 0 ]]; then
             echo "Download successful: $APK_NAME"
-            echo "Triggering installation for $APK_NAME..."
-            install_apk "/storage/emulated/0/download/$APK_NAME"
         else
             echo "Failed to download $APK_NAME"
         fi
