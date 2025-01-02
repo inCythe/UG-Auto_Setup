@@ -4,6 +4,8 @@ setup_environment() {
     echo "Updating Termux packages..."
     yes | pkg update && yes | pkg upgrade
 
+    yes | termux-setup-storage
+
     echo "Installing required tools..."
     yes | pkg install curl
 }
@@ -11,12 +13,18 @@ setup_environment() {
 download_file() {
     local APK_NAME=$1
     local APK_URL=$2
-    local DOWNLOAD_DIR="/storage/emulated/0/download"
-
-    mkdir -p "$DOWNLOAD_DIR"
 
     echo "Using curl to download $APK_NAME..."
-    curl -L -o "$DOWNLOAD_DIR/$APK_NAME" "$APK_URL"
+    curl -L -o "$APK_NAME" "$APK_URL"
+
+    return $?
+}
+
+install_apk() {
+    local APK_PATH=$1
+    echo "Triggering installation for $APK_PATH..."
+    
+    am start -a android.intent.action.VIEW -d "file://$APK_PATH" -t "application/vnd.android.package-archive"
 
     return $?
 }
@@ -38,6 +46,9 @@ main() {
 
         if [[ $? -eq 0 ]]; then
             echo "Download successful: $APK_NAME"
+            echo "Triggering installation for $APK_NAME..."
+            install_apk "$APK_NAME"
+
         else
             echo "Failed to download $APK_NAME"
         fi
