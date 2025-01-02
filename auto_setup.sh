@@ -1,6 +1,7 @@
 #!/bin/bash
 
 DOWNLOAD_DIR="/storage/emulated/0/download"
+GOFILE_LINK="https://gofile.io/d/VcMy16"
 
 startup() {
     if ! command -v jq &> /dev/null; then
@@ -11,43 +12,36 @@ startup() {
     fi
 }
 
-download_from_repo() {
-    echo "Downloading APKs from the repository..."
-    for apk in "Android_ID_Changer.apk" "Control_Screen_Orientation.apk" "ZArchiver.apk"; do
-        if curl -f -o "$DOWNLOAD_DIR/$apk" "https://raw.githubusercontent.com/inCythe/UG-Auto_Setup/main/apks/$apk"; then
-            echo "$apk downloaded successfully to $DOWNLOAD_DIR."
-        else
-            echo "Failed to download $apk."
-        fi
-    done
-}
-
-download_from_release() {
-    echo "Downloading Roblox.apk from the latest release..."
-    response=$(curl -s https://api.github.com/repos/inCythe/UG-Auto_Setup/releases/latest)
+download_from_gofile() {
+    echo "Downloading APKs from Gofile..."
     
-    if echo "$response" | jq . >/dev/null 2>&1; then
-        echo "Parsing response..."
-        browser_download_url=$(echo "$response" | jq -r '.assets[] | select(.name == "Roblox.apk") | .browser_download_url')
-        
-        if [ -n "$browser_download_url" ]; then
-            echo "Downloading from URL: $browser_download_url"
-            if curl -f -L -o "$DOWNLOAD_DIR/Roblox.apk" "$browser_download_url"; then
-                echo "Roblox.apk downloaded successfully to $DOWNLOAD_DIR."
-            else
-                echo "Failed to download Roblox.apk."
-            fi
-        else
-            echo "Roblox.apk not found in the latest release."
-        fi
+    if curl -L -o "$DOWNLOAD_DIR/Android_ID_Changer.apk" "$GOFILE_LINK/Android_ID_Changer.apk"; then
+        echo "Android_ID_Changer.apk downloaded successfully."
     else
-        echo "Failed to parse JSON response."
+        echo "Failed to download Android_ID_Changer.apk."
+    fi
+
+    if curl -L -o "$DOWNLOAD_DIR/Control_Screen_Orientation.apk" "$GOFILE_LINK/Control_Screen_Orientation.apk"; then
+        echo "Control_Screen_Orientation.apk downloaded successfully."
+    else
+        echo "Failed to download Control_Screen_Orientation.apk."
+    fi
+
+    if curl -L -o "$DOWNLOAD_DIR/ZArchiver.apk" "$GOFILE_LINK/ZArchiver.apk"; then
+        echo "ZArchiver.apk downloaded successfully."
+    else
+        echo "Failed to download ZArchiver.apk."
+    fi
+
+    if curl -L -o "$DOWNLOAD_DIR/Roblox.apk" "$GOFILE_LINK/Roblox.apk"; then
+        echo "Roblox.apk downloaded successfully."
+    else
+        echo "Failed to download Roblox.apk."
     fi
 }
 
 startup
-download_from_repo
-download_from_release
+download_from_gofile
 
 echo "Installing APKs..."
 for apk in "$DOWNLOAD_DIR"/*.apk; do
