@@ -11,7 +11,7 @@ startup() {
 
 download_from_repo() {
     echo "Downloading APKs from the repository..."
-    wget -r -l1 -H -nd -N -A.apk -e robots=off https://raw.githubusercontent.com/inCythe/UG-Auto_Setup/main/apks/
+    wget -r -l1 -H -nd -N -A.apk -e robots=off https://raw.githubusercontent.com/inCythe/UG-Auto_Setup/main/
 }
 
 download_from_release() {
