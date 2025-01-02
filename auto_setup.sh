@@ -12,7 +12,11 @@ startup() {
 download_from_repo() {
     echo "Downloading APKs from the repository..."
     for apk in "Android_ID_Changer.apk" "Control_Screen_Orientation.apk" "ZArchiver.apk"; do
-        curl -O https://raw.githubusercontent.com/inCythe/UG-Auto_Setup/main/$apk
+        if curl -O https://raw.githubusercontent.com/inCythe/UG-Auto_Setup/main/apks/$apk; then
+            echo "$apk downloaded successfully."
+        else
+            echo "Failed to download $apk."
+        fi
     done
 }
 
@@ -20,7 +24,7 @@ download_from_release() {
     echo "Downloading APKs from the latest release..."
     curl -s https://api.github.com/repos/inCythe/UG-Auto_Setup/releases/latest | \
     jq -r '.assets[] | select(.name | endswith(".apk")) | .url' | \
-    xargs -n 1 curl -LO
+    xargs -n 1 curl -LO || echo "Failed to download APKs from the latest release."
 }
 
 startup
