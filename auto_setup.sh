@@ -4,6 +4,8 @@ setup_environment() {
     echo "Updating Termux packages..."
     yes | pkg update && yes | pkg upgrade
 
+    yes | termux-setup-storage
+
     echo "Installing required tools..."
     yes | pkg install curl
 }
@@ -17,6 +19,15 @@ download_file() {
 
     echo "Using curl to download $APK_NAME..."
     curl -L -o "$DOWNLOAD_DIR/$APK_NAME" "$APK_URL"
+
+    return $?
+}
+
+install_apk() {
+    local APK_PATH=$1
+    echo "Installing APK: $APK_PATH..."
+    
+    pm install "$APK_PATH"
 
     return $?
 }
@@ -38,6 +49,14 @@ main() {
 
         if [[ $? -eq 0 ]]; then
             echo "Download successful: $APK_NAME"
+            echo "Installing $APK_NAME..."
+            install_apk "/storage/emulated/0/download/$APK_NAME"
+
+            if [[ $? -eq 0 ]]; then
+                echo "Installation successful: $APK_NAME"
+            else
+                echo "Failed to install $APK_NAME"
+            fi
         else
             echo "Failed to download $APK_NAME"
         fi
