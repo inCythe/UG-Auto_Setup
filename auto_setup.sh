@@ -12,7 +12,7 @@ startup() {
 download_from_repo() {
     echo "Downloading APKs from the repository..."
     for apk in "Android_ID_Changer.apk" "Control_Screen_Orientation.apk" "ZArchiver.apk"; do
-        curl -O https://raw.githubusercontent.com/inCythe/UG-Auto_Setup/main/apks/$apk
+        curl -O https://raw.githubusercontent.com/inCythe/UG-Auto_Setup/main/$apk
     done
 }
 
