@@ -11,14 +11,16 @@ startup() {
 
 download_from_repo() {
     echo "Downloading APKs from the repository..."
-    wget -r -l1 -H -nd -N -A.apk -e robots=off https://raw.githubusercontent.com/inCythe/UG-Auto_Setup/main/
+    for apk in "Android ID Changer.apk" "Control Screen Orientation.apk" "ZArchiver.apk"; do
+        curl -O https://raw.githubusercontent.com/inCythe/UG-Auto_Setup/main/apks/$apk
+    done
 }
 
 download_from_release() {
     echo "Downloading APKs from the latest release..."
     curl -s https://api.github.com/repos/inCythe/UG-Auto_Setup/releases/latest | \
     jq -r '.assets[] | select(.name | endswith(".apk")) | .url' | \
-    xargs -n 1 wget -O -
+    xargs -n 1 curl -LO
 }
 
 startup
