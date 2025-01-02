@@ -40,7 +40,7 @@ main() {
             echo "Download successful: $APK_NAME"
             local DOWNLOAD_DIR="/storage/emulated/0/Download"
             echo "Attempting to install $APK_NAME..."
-            am start -a android.intent.action.VIEW -d "file://$DOWNLOAD_DIR/$APK_NAME" -t "application/vnd.android.package-archive" || \
+            pm install "$DOWNLOAD_DIR/$APK_NAME" || \
             echo "Manual installation required for $APK_NAME"
         else
             echo "Failed to download $APK_NAME"
