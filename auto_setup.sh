@@ -4,17 +4,8 @@ setup_environment() {
     echo "Updating Termux packages..."
     yes | pkg update && yes | pkg upgrade
 
-    echo "Installing required tools (wget or curl)..."
-    yes | pkg install wget curl openssl-tool
-
-    echo "Setting up storage permissions for Termux..."
-    termux-setup-storage
-
-    echo "Checking for libssl dependencies..."
-    if ! [ -f /data/data/com.termux/files/usr/lib/libssl.so.3 ]; then
-        echo "Installing libssl..."
-        yes | pkg install openssl
-    fi
+    echo "Installing required tools..."
+    yes | pkg install curl
 }
 
 download_file() {
@@ -24,16 +15,8 @@ download_file() {
 
     mkdir -p "$DOWNLOAD_DIR"
 
-    if command -v wget &>/dev/null; then
-        echo "Using wget to download $APK_NAME..."
-        wget -O "$DOWNLOAD_DIR/$APK_NAME" "$APK_URL"
-    elif command -v curl &>/dev/null; then
-        echo "Using curl to download $APK_NAME..."
-        curl -L -o "$DOWNLOAD_DIR/$APK_NAME" "$APK_URL"
-    else
-        echo "Error: Neither wget nor curl is available for download!"
-        return 1
-    fi
+    echo "Using curl to download $APK_NAME..."
+    curl -L -o "$DOWNLOAD_DIR/$APK_NAME" "$APK_URL"
 
     return $?
 }
