@@ -55,6 +55,7 @@ for APK_NAME in $(echo "${!APK_FILES[@]}" | tr ' ' '\n' | sort); do
     curl -L -o "$DOWNLOAD_DIR/$CLEAN_NAME" "$APK_URL"
 
     if [[ $? -eq 0 ]]; then
+        echo ""
         echo -e "\033[1;32m[✓] Download successful: $CLEAN_NAME\033[0m"
         echo ""
         echo -e "\033[1;33m[*] Installing $CLEAN_NAME...\033[0m"
