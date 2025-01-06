@@ -6,7 +6,6 @@ print_banner() {
     echo "║           Auto Setup           ║"
     echo "╚════════════════════════════════╝"
     echo -e "\033[0m"
-    echo ""
 }
 
 print_status() {
