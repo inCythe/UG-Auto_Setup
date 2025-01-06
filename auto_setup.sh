@@ -35,6 +35,8 @@ for APK_NAME in "${!APK_FILES[@]}"; do
     APK_URL="${APK_FILES[$APK_NAME]}"
 
     echo "Downloading $APK_NAME..."
+    echo ""
+
     curl -L -o "$DOWNLOAD_DIR/$APK_NAME" "$APK_URL"
 
     if [[ $? -eq 0 ]]; then
@@ -42,8 +44,11 @@ for APK_NAME in "${!APK_FILES[@]}"; do
         echo ""
 
         echo "Installing $APK_NAME..."
+        echo ""
+
         if command -v su >/dev/null 2>&1; then
-            su -c "pm install -r $DOWNLOAD_DIR/$APK_NAME --install-reason 1"
+            su -c "pm install -r $DOWNLOAD_DIR/$APK_NAME"
+            su -c "pm grant com.yourapp.permission android.permission.REQUEST_INSTALL_PACKAGES"
         else
             am start -a android.intent.action.VIEW -d "file://$DOWNLOAD_DIR/$APK_NAME" -t "application/vnd.android.package-archive"
         fi
