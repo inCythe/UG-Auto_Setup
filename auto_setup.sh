@@ -44,13 +44,19 @@ mkdir -p "$DOWNLOAD_DIR"
 for APK_NAME in $(echo "${!APK_FILES[@]}" | tr ' ' '\n' | sort); do
     CLEAN_NAME="${APK_NAME:2}"
     APK_URL="${APK_FILES[$APK_NAME]}"
+
+    clear
+    print_banner
+    echo ""
     
     echo -e "\033[1;32m[+] Downloading $CLEAN_NAME...\033[0m"
     echo ""
     
     curl -L -o "$DOWNLOAD_DIR/$CLEAN_NAME" "$APK_URL"
+
     if [[ $? -eq 0 ]]; then
         echo -e "\033[1;32m[✓] Download successful: $CLEAN_NAME\033[0m"
+        echo ""
         echo -e "\033[1;33m[*] Installing $CLEAN_NAME...\033[0m"
         echo ""
         
