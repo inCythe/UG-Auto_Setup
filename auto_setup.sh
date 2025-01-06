@@ -60,7 +60,9 @@ for APK_NAME in "${!APK_FILES[@]}"; do
     
     curl -L -o "$DOWNLOAD_DIR/$APK_NAME" "$APK_URL"
     if [[ $? -eq 0 ]]; then
-        echo ""
+        clear
+        print_banner
+
         echo -e "\033[1;32m[✓] Download successful: $APK_NAME\033[0m"
         echo ""
 
@@ -76,6 +78,9 @@ for APK_NAME in "${!APK_FILES[@]}"; do
             am start -a android.intent.action.VIEW -d "file://$DOWNLOAD_DIR/$APK_NAME" -t "application/vnd.android.package-archive"
         fi
     else
+        clear
+        print_banner
+
         echo -e "\033[1;31m[✗] Failed to download $APK_NAME. Skipping installation.\033[0m"
         echo ""
     fi
