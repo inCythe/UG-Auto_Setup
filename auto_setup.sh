@@ -48,7 +48,6 @@ for APK_NAME in "${!APK_FILES[@]}"; do
 
         if command -v su >/dev/null 2>&1; then
             su -c "pm install -r $DOWNLOAD_DIR/$APK_NAME"
-            su -c "pm grant com.yourapp.permission android.permission.REQUEST_INSTALL_PACKAGES"
         else
             am start -a android.intent.action.VIEW -d "file://$DOWNLOAD_DIR/$APK_NAME" -t "application/vnd.android.package-archive"
         fi
