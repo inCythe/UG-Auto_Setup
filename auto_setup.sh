@@ -58,6 +58,11 @@ for APK_NAME in $(echo "${!APK_FILES[@]}" | tr ' ' '\n' | sort); do
         echo ""
         echo -e "\033[1;32m[✓] Download successful: $CLEAN_NAME\033[0m"
         echo ""
+
+        clear
+        print_banner
+        echo ""
+
         echo -e "\033[1;33m[*] Installing $CLEAN_NAME...\033[0m"
         echo ""
         
