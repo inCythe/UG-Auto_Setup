@@ -1,34 +1,40 @@
 #!/bin/bash
 
+RED="\033[1;31m"
+GREEN="\033[1;32m"
+YELLOW="\033[1;33m"
+CYAN="\033[1;36m"
+RESET="\033[0m"
+
 print_banner() {
-    echo -e "\033[1;36m"
-    echo "╔════════════════════════════════╗"
-    echo "║           Auto Setup           ║"
-    echo "╚════════════════════════════════╝"
-    echo -e "\033[0m"
+    clear
+    echo -e "${CYAN}"
+    echo "╔══════════════════════════════════════════╗"
+    echo "║                Auto Setup                ║"
+    echo "╚══════════════════════════════════════════╝"
+    echo -e "${RESET}"
 }
 
 print_status() {
-    echo -e "\033[1;33m[*] $1\033[0m"
+    echo -e "${YELLOW}[*] $1${RESET}\n"
 }
 
-clear
+print_success() {
+    echo -e "${GREEN}[✓] $1${RESET}\n"
+}
+
+print_error() {
+    echo -e "${RED}[✗] $1${RESET}\n"
+}
+
 print_banner
-print_status "Updating Termux packages..."
-echo ""
+print_status "Initializing package updates..."
 yes | pkg update && yes | pkg upgrade
 
-clear
 print_banner
-print_status "Installing required tools..."
-echo ""
+print_status "Setting up environment..."
 yes | pkg install curl
 yes | termux-setup-storage
-
-clear
-print_banner
-print_status "Installing APK files..."
-echo ""
 
 DOWNLOAD_DIR="/storage/emulated/0/download"
 mkdir -p "$DOWNLOAD_DIR"
@@ -48,38 +54,34 @@ for APK in "${APK_FILES[@]}"; do
     APK_NAME="${APK%%|*}"
     APK_URL="${APK##*|}"
     
-    clear
     print_banner
+    print_status "Downloading: $APK_NAME"
     
-    echo -e "\033[1;32m[+] Downloading $APK_NAME...\033[0m"
-    echo ""
-    
-    curl -L -o "$DOWNLOAD_DIR/$APK_NAME" "$APK_URL"
-    if [[ $? -eq 0 ]]; then
-        clear
+    if curl -L -o "$DOWNLOAD_DIR/$APK_NAME" "$APK_URL"; then
         print_banner
-        echo -e "\033[1;32m[✓] Download successful: $APK_NAME\033[0m"
-        echo ""
+        print_success "Download complete: $APK_NAME"
+        sleep 1
 
-        clear
         print_banner
-        echo -e "\033[1;33m[*] Installing $APK_NAME...\033[0m"
-        echo ""
+        print_status "Installing: $APK_NAME"
         
         if command -v su >/dev/null 2>&1; then
             su -c "pm install -r $DOWNLOAD_DIR/$APK_NAME"
         else
-            am start -a android.intent.action.VIEW -d "file://$DOWNLOAD_DIR/$APK_NAME" -t "application/vnd.android.package-archive"
+            am start -a android.intent.action.VIEW \
+                     -d "file://$DOWNLOAD_DIR/$APK_NAME" \
+                     -t "application/vnd.android.package-archive"
         fi
-    else
-        clear
         print_banner
-        echo -e "\033[1;31m[✗] Failed to download $APK_NAME. Skipping installation.\033[0m"
-        echo ""
+        print_success "Installation complete: $APK_NAME"
+        sleep 2
+    else
+        print_banner
+        print_error "Failed to download: $APK_NAME"
+        sleep 3
     fi
 done
 
-clear
 print_banner
-
-echo -e "\033[1;32m[✓] Setup complete!\033[0m"
+print_success "Setup completed successfully!"
+sleep 4
