@@ -34,7 +34,7 @@ mkdir -p "$DOWNLOAD_DIR"
 for APK_NAME in "${!APK_FILES[@]}"; do
     APK_URL="${APK_FILES[$APK_NAME]}"
 
-    echo "\nDownloading $APK_NAME..."
+    echo "Downloading $APK_NAME..."
     curl -L -o "$DOWNLOAD_DIR/$APK_NAME" "$APK_URL"
 
     if [[ $? -eq 0 ]]; then
