@@ -51,6 +51,7 @@ mkdir -p "$DOWNLOAD_DIR"
 
 for APK_NAME in "${!APK_FILES[@]}"; do
     APK_URL="${APK_FILES[$APK_NAME]}"
+    
     clear
     print_banner
     
