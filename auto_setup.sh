@@ -40,6 +40,7 @@ DOWNLOAD_DIR="/storage/emulated/0/download"
 mkdir -p "$DOWNLOAD_DIR"
 
 declare -a APK_FILES=(
+    "UG_Cloner.apk|https://github.com/inCythe/UG-Auto_Setup/releases/download/1.0/UG_Cloner.apk"
     "ZArchiver.apk|https://github.com/inCythe/UG-Auto_Setup/releases/download/1.0/ZArchiver.apk"
     "Android_ID_Changer.apk|https://github.com/inCythe/UG-Auto_Setup/releases/download/1.0/Android_ID_Changer.apk"
     "Control_Screen_Orientation.apk|https://github.com/inCythe/UG-Auto_Setup/releases/download/1.0/Control_Screen_Orientation.apk"
